@@ -137,11 +137,21 @@ namespace Chat.Application.Services
             // Get current user name
             var name = GetName(context);
 
+            var lastMessages = await _chatRepository.GetLastMessagesAsync();
+
+            if (lastMessages.Any())
+            {
+                foreach(var message in lastMessages.OrderBy(x=> x.SentDate))
+                {
+                    await clients.Caller.SendAsync("ReceiveMessage", message.SentDate.ToString("G"), message.Username.Split('@')[0], message.Message);
+                }                   
+            }
+
             // Notify other users that someone is here
-            await clients.Others.SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), null, $"{name} came to scare us!");
+            await clients.Others.SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), null, $"{name} entered the chat room!");
 
             // Notify current user that we are ready
-            await clients.Caller.SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), name, "Lock and loaded!");
+            await clients.Caller.SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), name, "All ready to start!");
         }
 
         /// <summary>

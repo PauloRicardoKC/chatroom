@@ -32,7 +32,6 @@ namespace Chat.UI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseMigrationsEndPoint();
                 DbInitializer.SeedData(IocConfiguration.GetDbContext(Configuration, "DefaultConnection"));
             }
             else

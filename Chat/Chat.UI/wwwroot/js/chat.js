@@ -8,7 +8,6 @@ document.getElementById("sendButton").disabled = true;
 
 // Handle Receive message
 connection.on("ReceiveMessage", function (date, user, message) {
-    // Styling magic
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br/>');
     var encodedMsg = (user != null ? user + ": " : '') + msg + '<small style="float: right;">' + date + '</small>';
 
@@ -37,7 +36,6 @@ var sendFc = function (event) {
     connection.invoke("SendMessage", message).catch(function (err) {
         return console.error(err.toString());
     }).then(() => {
-        // Clean text box
         document.getElementById("messageInput").value = "";
     });
     event.preventDefault();

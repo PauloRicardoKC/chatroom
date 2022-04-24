@@ -5,5 +5,6 @@ namespace Chat.Domain.Interfaces.Persistence
     public interface IChatRepository
     {
         Task SaveAsync(ChatMessage entity);
+        Task<IEnumerable<ChatMessage>> GetLastMessagesAsync();
     }
 }
