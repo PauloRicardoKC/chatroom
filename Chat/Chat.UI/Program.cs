@@ -9,6 +9,13 @@ namespace Chat.UI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, configuration) =>
+                {
+                    configuration.AddJsonFile("appsettings.json");
+                    configuration.SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName);
+                    configuration.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true);
+
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

@@ -16,7 +16,8 @@ namespace Chat.Infra.Data.Databases.Migrations
                     MessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique MessageId identifier"),
                     SenderUserId = table.Column<string>(type: "varchar(50)", nullable: false, comment: "SenderUserId of the ChatMessage"),
                     Message = table.Column<string>(type: "varchar(500)", nullable: false, comment: "Message of the ChatMessage"),
-                    SentDate = table.Column<DateTime>(type: "datetime", nullable: false, comment: "Sent Date of the ChatMessage")
+                    SentDate = table.Column<DateTime>(type: "datetime", nullable: false, comment: "Sent Date of the ChatMessage"),
+                    Username = table.Column<string>(type: "varchar(256)", nullable: true),
                 },
                 constraints: table =>
                 {

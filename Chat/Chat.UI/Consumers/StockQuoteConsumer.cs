@@ -1,21 +1,25 @@
-﻿using Chat.Domain.Interfaces.Application;
-using Chat.Domain.Interfaces.Commands;
+﻿using Chat.Domain.Entities;
+using Chat.Domain.Interfaces;
+using Chat.Domain.Interfaces.Application;
+using Chat.Domain.Interfaces.Persistence;
 using MassTransit;
 
 namespace Chat.UI.Consumers
 {
-    public class StockQuoteConsumer : IConsumer<IStockQuoteCommand>
+    public class StockQuoteConsumer : IConsumer<StockQuote>
     {
         private readonly ILogger<StockQuoteConsumer> _logger;
         private readonly IChatService _chatService;
+        private readonly IChatRepository _chatRepository;
 
-        public StockQuoteConsumer(ILogger<StockQuoteConsumer> logger, IChatService chatService)
+        public StockQuoteConsumer(ILogger<StockQuoteConsumer> logger, IChatService chatService, IChatRepository chatRepository)
         {
             _logger = logger;
-            _chatService = chatService; 
+            _chatService = chatService;
+            _chatRepository = chatRepository;
         }
 
-        public async Task Consume(ConsumeContext<IStockQuoteCommand> context)
+        public async Task Consume(ConsumeContext<StockQuote> context)
         {
             try
             {
@@ -27,7 +31,7 @@ namespace Chat.UI.Consumers
                
                 using (var client = new HttpClient())
                 {
-                    var stockCode = message.StockCode.Split('=')[1];
+                    var stockCode = message.StockCode;
 
                     var uri = $"https://stooq.com/q/l/?s={stockCode}";
 
@@ -45,7 +49,17 @@ namespace Chat.UI.Consumers
 
                             var messageFormat = $"{stockCode} quote is ${stockQuote} per share";
 
-                            await _chatService.SendMessageAsync(message.HubCallerContext, message.Clients, messageFormat);
+                            var chatMessage = new ChatMessage()
+                            {
+                                MessageId = Guid.NewGuid(),
+                                Message = messageFormat,
+                                SentDate = DateTime.Now,
+                                SenderUserId = message.SenderUserId
+                            };
+
+                            await _chatRepository.SaveAsync(chatMessage);
+
+                            //await _chatService.BotMessage(chatMessage.SentDate, chatMessage.Message, null);
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using Chat.Domain.Interfaces.Commands;
+﻿using Chat.Domain.Interfaces;
 using Chat.Infra.Data.DataBases;
 using Chat.Infra.Data.DataBases.Context;
 using Chat.UI.Configurations;
@@ -32,31 +32,31 @@ namespace Chat.UI
             services.AddRazorPages();
             services.AddIoC(Configuration);
 
-            //services.AddBroker(
-            //    configure =>
-            //    {
-            //        configure.SetBrokerOptions(broker =>
-            //        {
-            //            broker.AddHostedService = true;
-            //            broker.HostOptions = new BrokerHostOptions
-            //            {
-            //                Host = $"{Configuration.GetValue<string>("RabbitConnection")}"
-            //            };
+            services.AddBroker(
+                configure =>
+                {
+                    configure.SetBrokerOptions(broker =>
+                    {
+                        broker.AddHostedService = true;
+                        broker.HostOptions = new BrokerHostOptions
+                        {
+                            Host = Configuration.GetConnectionString("RabbitConnection")
+                        };
 
-            //            broker.PrefetchCount = 1;
-            //        });
-            //    },
-            //    consumers =>
-            //    {
-            //        consumers.Add<StockQuoteConsumer>(r => r.Interval(3, TimeSpan.FromSeconds(10)));
-            //    },
-            //    queues =>
-            //    {
-            //        queues.Map<IStockQuoteCommand>();
-            //    }
-            //);
+                        broker.PrefetchCount = 1;
+                    });
+                },
+                consumers =>
+                {
+                    consumers.Add<StockQuoteConsumer>(r => r.Interval(3, TimeSpan.FromSeconds(10)));
+                },
+                queues =>
+                {
+                    queues.Map<StockQuote>();
+                }
+            );
 
-            //services.AddHostedService<Worker>();
+            services.AddHostedService<Worker>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

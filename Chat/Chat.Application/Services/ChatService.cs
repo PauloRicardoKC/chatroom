@@ -1,7 +1,7 @@
 ﻿using Chat.Domain.Dtos;
 using Chat.Domain.Entities;
+using Chat.Domain.Interfaces;
 using Chat.Domain.Interfaces.Application;
-using Chat.Domain.Interfaces.Commands;
 using Chat.Domain.Interfaces.Persistence;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
@@ -23,7 +23,7 @@ namespace Chat.Application.Services
         {
             _serviceProvider = serviceProvider;
             _chatRepository = chatRepositor;
-            _sender = sender;            
+            _sender = sender;
         }
 
         /// <summary>
@@ -133,6 +133,11 @@ namespace Chat.Application.Services
 
         #region User Actions
 
+        public async Task BotMessage(DateTime sentDate, string message, IHubCallerClients? clients)
+        {
+            await clients.All.SendAsync("ReceiveMessage", sentDate.ToString("G"), "Bot", message);
+        }
+
         /// <summary>
         /// Notifications when user joins chat
         /// Could be done in OnConnectedAsync event
@@ -149,11 +154,11 @@ namespace Chat.Application.Services
             if (lastMessages.Any())
             {
                 foreach (var message in lastMessages.OrderBy(x => x.SentDate))
-                {
+                {                    
                     await clients.Caller.SendAsync("ReceiveMessage", message.SentDate.ToString("G"), message.Username.Split('@')[0], message.Message);
                 }
             }
-
+            
             // Notify other users that someone is here
             await clients.Others.SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), null, $"{name} entered the chat room!");
 
@@ -181,16 +186,16 @@ namespace Chat.Application.Services
                     break;
             }
 
+            var senderUserId = context.UserIdentifier;
+
             if (message.Contains("/stock="))
             {
                 var stockCode = message.Split('=')[1];
 
-                await _sender.Send<IStockQuoteCommand>(new
+                await _sender.Send<StockQuote>(new
                 {
-                    context.UserIdentifier,
-                    stockCode,
-                    context,
-                    clients
+                    senderUserId,
+                    stockCode
                 });
             }
             else

@@ -10,24 +10,33 @@ namespace Chat.Infra.Data.Repositories
         private readonly ApplicationDbContext _context;
 
         public ChatRepository(ApplicationDbContext context)
-        {           
+        {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task SaveAsync(ChatMessage entity)
         {
-            await _context.Set<ChatMessage>().AddAsync(entity);
+            try
+            {
+                await _context.Set<ChatMessage>().AddAsync(entity);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public async Task<IEnumerable<ChatMessage>> GetLastMessagesAsync()
         {
-            return await _context.Set<ChatMessage>()
-                .FromSqlRaw("SELECT TOP(50) c.*, u.Username FROM ChatMessage c " +
+            var response = await _context.Set<ChatMessage>()
+                .FromSqlRaw("SELECT TOP(50) c.MessageId, c.SenderUserId, c.Message, c.SentDate, u.Username FROM ChatMessage c " +
                             "inner join AspNetUsers u on (c.SenderUserId = u.Id) " +
                             "order by c.SentDate desc")
-                .ToListAsync();                
+                .ToListAsync();
+
+            return response;
         }
     }
 }

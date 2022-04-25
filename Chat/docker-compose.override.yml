@@ -4,7 +4,7 @@ services:
   chat.ui:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-       - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "32769:80"
     #volumes:

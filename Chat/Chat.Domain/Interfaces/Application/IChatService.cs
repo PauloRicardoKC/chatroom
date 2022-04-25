@@ -67,6 +67,14 @@ namespace Chat.Domain.Interfaces.Application
         /// <returns>User list formatted string</returns>
         string GetUsersListString(HubCallerContext context, IHubCallerClients clients);
 
+        /// <summary>
+        /// Get bot message
+        /// </summary>
+        /// <param name="sentDate">Sent date message</param>
+        /// <param name="message">Message</param>
+        /// <returns></returns>
+        Task BotMessage(DateTime sentDate, string message, IHubCallerClients? clients);
+
         #endregion
     }
 }

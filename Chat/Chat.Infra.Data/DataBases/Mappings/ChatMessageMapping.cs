@@ -22,22 +22,26 @@ namespace Chat.Infra.Data.DataBases.Mappings
                 .HasColumnName("MessageId")
                 .HasComment("Unique MessageId identifier");
 
-            builder.Property(statement => statement.SenderUserId)
+            builder.Property(c => c.SenderUserId)
                .HasColumnName("SenderUserId")
                .HasColumnType("varchar(50)")
                .IsRequired()
                .HasComment("SenderUserId of the ChatMessage");
 
-            builder.Property(statement => statement.Message)
+            builder.Property(c => c.Message)
                .HasColumnName("Message")
                .HasColumnType("varchar(500)")
                .IsRequired()
                .HasComment("Message of the ChatMessage");
 
-            builder.Property(statement => statement.SentDate)
+            builder.Property(c => c.SentDate)
                .HasColumnName("SentDate")
                .HasColumnType("datetime")
                .HasComment("Sent Date of the ChatMessage");
+
+            builder.Property(c => c.Username)
+               .HasColumnName("Username")
+               .HasColumnType("varchar(256)");
         }
     }
 }
