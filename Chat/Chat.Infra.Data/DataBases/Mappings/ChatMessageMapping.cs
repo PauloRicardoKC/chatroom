@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Chat.Infra.Data.DataBases
+namespace Chat.Infra.Data.DataBases.Mappings
 {
     [ExcludeFromCodeCoverage]
     public class ChatMessageMapping : IEntityTypeConfiguration<ChatMessage>
@@ -37,7 +37,7 @@ namespace Chat.Infra.Data.DataBases
             builder.Property(statement => statement.SentDate)
                .HasColumnName("SentDate")
                .HasColumnType("datetime")
-               .HasComment("Sent Date of the ChatMessage");            
+               .HasComment("Sent Date of the ChatMessage");
         }
     }
 }

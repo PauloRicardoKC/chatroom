@@ -1,9 +1,13 @@
 ﻿using Chat.Domain.Dtos;
 using Chat.Domain.Entities;
 using Chat.Domain.Interfaces.Application;
+using Chat.Domain.Interfaces.Client;
+using Chat.Domain.Interfaces.Commands;
 using Chat.Domain.Interfaces.Persistence;
+using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Chat.Application.Services
 {
@@ -12,11 +16,15 @@ namespace Chat.Application.Services
         public IList<IMessageHandler> MessageHandlers { get; set; } = new List<IMessageHandler>();
         private readonly IServiceProvider _serviceProvider;
         private readonly IChatRepository _chatRepository;
+        //private readonly ISendEndpointProvider _sender;
 
-        public ChatService(IServiceProvider serviceProvider, IChatRepository chatRepository)
+        public ChatService(
+            IServiceProvider serviceProvider, 
+            IChatRepository chatRepository)            
         {
             _serviceProvider = serviceProvider;
             _chatRepository = chatRepository;
+            //_sender = sender;
         }
 
         /// <summary>
@@ -174,15 +182,36 @@ namespace Chat.Application.Services
                     break;
             }
 
-            var chatMessage = new ChatMessage()
+            if (message.Contains("/stock="))
             {
-                MessageId = Guid.NewGuid(),
-                Message = message,
-                SentDate = DateTime.Now,
-                SenderUserId = context.UserIdentifier
-            };
+                var stockCode = message.Split('=')[1];
 
-            await _chatRepository.SaveAsync(chatMessage);
+                using (var client = new HttpClient())
+                {
+                    var url = $"https://stooq.com/q/l/?s={stockCode}&f=sd2t2ohlcv&h&e=csv";
+
+                    var content = await client.GetStringAsync(url);
+                    var result = JsonConvert.DeserializeObject<string>(content);
+                }               
+
+                //await _sender.Send<IStockQuoteCommand>(new 
+                //{
+                //    context.UserIdentifier,
+                //    stockCode
+                //});
+            }
+            else
+            {
+                var chatMessage = new ChatMessage()
+                {
+                    MessageId = Guid.NewGuid(),
+                    Message = message,
+                    SentDate = DateTime.Now,
+                    SenderUserId = context.UserIdentifier
+                };
+
+                await _chatRepository.SaveAsync(chatMessage);
+            }
         }
 
         /// <summary>

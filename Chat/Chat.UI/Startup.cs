@@ -1,5 +1,11 @@
-﻿using Chat.Infra.Data.DataBases;
+﻿using Chat.Domain.Interfaces.Commands;
+using Chat.Infra.Data.DataBases;
+using Chat.Infra.Data.DataBases.Context;
+using Chat.UI.Configurations;
 using Chat.UI.Configurations.Ioc;
+using Chat.UI.Configurations.MessageBus;
+using Chat.UI.Consumers;
+using GreenPipes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
@@ -25,11 +31,37 @@ namespace Chat.UI
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddIoC(Configuration);
+
+            //services.AddBroker(
+            //    configure =>
+            //    {
+            //        configure.SetBrokerOptions(broker =>
+            //        {
+            //            broker.AddHostedService = true;
+            //            broker.HostOptions = new BrokerHostOptions
+            //            {
+            //                Host = $"{Configuration.GetValue<string>("RabbitConnection")}"
+            //            };
+
+            //            broker.PrefetchCount = 1;
+            //        });
+            //    },
+            //    consumers =>
+            //    {
+            //        consumers.Add<StockQuoteConsumer>(r => r.Interval(3, TimeSpan.FromSeconds(10)));
+            //    },
+            //    queues =>
+            //    {
+            //        queues.Map<IStockQuoteCommand>();
+            //    }
+            //);
+
+            //services.AddHostedService<Worker>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopmentOrDocker())
             {
                 app.UseDeveloperExceptionPage();
                 DbInitializer.SeedData(IocConfiguration.GetDbContext(Configuration, "DefaultConnection"));

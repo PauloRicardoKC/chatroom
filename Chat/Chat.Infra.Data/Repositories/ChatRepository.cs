@@ -1,6 +1,6 @@
 ﻿using Chat.Domain.Entities;
 using Chat.Domain.Interfaces.Persistence;
-using Chat.Infra.Data.DataBases;
+using Chat.Infra.Data.DataBases.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infra.Data.Repositories

@@ -35,7 +35,7 @@ namespace Chat.Application.Hubs
         #region User Actions
 
         /// <summary>
-        /// Massage sending and command handling
+        /// Message sending and command handling
         /// </summary>
         /// <param name="message">User message</param>
         public async Task SendMessage(string message)

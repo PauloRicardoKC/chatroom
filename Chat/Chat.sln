@@ -15,13 +15,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 - infra", "04 - infra", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C8C14C28-4A00-4785-9117-F83C840C0D40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.UI", "Chat.UI\Chat.UI.csproj", "{D833C94E-F128-47AD-B0E7-DF3AE0DE0FDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.UI", "Chat.UI\Chat.UI.csproj", "{D833C94E-F128-47AD-B0E7-DF3AE0DE0FDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Application", "Chat.Application\Chat.Application.csproj", "{2B799790-0D61-428E-B606-56F9D7487F2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Application", "Chat.Application\Chat.Application.csproj", "{2B799790-0D61-428E-B606-56F9D7487F2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Domain", "Chat.Domain\Chat.Domain.csproj", "{51E68F75-6B41-40ED-AEE0-78DF4689A1AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Domain", "Chat.Domain\Chat.Domain.csproj", "{51E68F75-6B41-40ED-AEE0-78DF4689A1AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Infra.Data", "Chat.Infra.Data\Chat.Infra.Data.csproj", "{A6AF7CD3-821D-414C-97D8-41373AEEF096}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Infra.Data", "Chat.Infra.Data\Chat.Infra.Data.csproj", "{A6AF7CD3-821D-414C-97D8-41373AEEF096}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{262C1B23-7760-4341-A31B-20122480274B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{A6AF7CD3-821D-414C-97D8-41373AEEF096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6AF7CD3-821D-414C-97D8-41373AEEF096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6AF7CD3-821D-414C-97D8-41373AEEF096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262C1B23-7760-4341-A31B-20122480274B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262C1B23-7760-4341-A31B-20122480274B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262C1B23-7760-4341-A31B-20122480274B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262C1B23-7760-4341-A31B-20122480274B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
