@@ -1,13 +1,11 @@
 ﻿using Chat.Domain.Dtos;
 using Chat.Domain.Entities;
 using Chat.Domain.Interfaces.Application;
-using Chat.Domain.Interfaces.Client;
 using Chat.Domain.Interfaces.Commands;
 using Chat.Domain.Interfaces.Persistence;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace Chat.Application.Services
 {
@@ -16,15 +14,16 @@ namespace Chat.Application.Services
         public IList<IMessageHandler> MessageHandlers { get; set; } = new List<IMessageHandler>();
         private readonly IServiceProvider _serviceProvider;
         private readonly IChatRepository _chatRepository;
-        //private readonly ISendEndpointProvider _sender;
+        private readonly ISendEndpointProvider _sender;
 
         public ChatService(
-            IServiceProvider serviceProvider, 
-            IChatRepository chatRepository)            
+            IServiceProvider serviceProvider,
+            IChatRepository chatRepositor,
+            ISendEndpointProvider sender)
         {
             _serviceProvider = serviceProvider;
-            _chatRepository = chatRepository;
-            //_sender = sender;
+            _chatRepository = chatRepositor;
+            _sender = sender;            
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Chat.Application.Services
 
             // Ordering
             MessageHandlers = MessageHandlers.OrderBy(handler => handler.Order).ToList();
-        }        
+        }
 
         #region User Management
 
@@ -149,10 +148,10 @@ namespace Chat.Application.Services
 
             if (lastMessages.Any())
             {
-                foreach(var message in lastMessages.OrderBy(x=> x.SentDate))
+                foreach (var message in lastMessages.OrderBy(x => x.SentDate))
                 {
                     await clients.Caller.SendAsync("ReceiveMessage", message.SentDate.ToString("G"), message.Username.Split('@')[0], message.Message);
-                }                   
+                }
             }
 
             // Notify other users that someone is here
@@ -186,19 +185,13 @@ namespace Chat.Application.Services
             {
                 var stockCode = message.Split('=')[1];
 
-                using (var client = new HttpClient())
+                await _sender.Send<IStockQuoteCommand>(new
                 {
-                    var url = $"https://stooq.com/q/l/?s={stockCode}&f=sd2t2ohlcv&h&e=csv";
-
-                    var content = await client.GetStringAsync(url);
-                    var result = JsonConvert.DeserializeObject<string>(content);
-                }               
-
-                //await _sender.Send<IStockQuoteCommand>(new 
-                //{
-                //    context.UserIdentifier,
-                //    stockCode
-                //});
+                    context.UserIdentifier,
+                    stockCode,
+                    context,
+                    clients
+                });
             }
             else
             {
@@ -227,7 +220,6 @@ namespace Chat.Application.Services
                 return string.Join('\n', Users.Select(u => u.Value));
             }
         }
-
         #endregion
     }
 }

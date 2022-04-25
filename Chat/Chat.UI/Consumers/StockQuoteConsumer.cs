@@ -23,10 +23,32 @@ namespace Chat.UI.Consumers
 
                 var message = context.Message;
 
-                if (message == null) return;                
+                if (message == null) return;
+               
+                using (var client = new HttpClient())
+                {
+                    var stockCode = message.StockCode.Split('=')[1];
 
-                //TODO ler arquivo, chamar serviço para retornar informação.
-                //await _chatService.SendMessageAsync();                
+                    var uri = $"https://stooq.com/q/l/?s={stockCode}";
+
+                    var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+                    var response = await client.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseStream = await response.Content.ReadAsStringAsync();
+
+                        if (responseStream.Split(',')[3] != "N/D")
+                        {
+                            var stockQuote = responseStream.Split(',')[3];
+
+                            var messageFormat = $"{stockCode} quote is ${stockQuote} per share";
+
+                            await _chatService.SendMessageAsync(message.HubCallerContext, message.Clients, messageFormat);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

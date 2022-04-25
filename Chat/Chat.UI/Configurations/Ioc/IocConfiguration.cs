@@ -2,9 +2,7 @@
 using Chat.Application.Hubs;
 using Chat.Application.Services;
 using Chat.Domain.Interfaces.Application;
-using Chat.Domain.Interfaces.Client;
 using Chat.Domain.Interfaces.Persistence;
-using Chat.Infra.Data.Client;
 using Chat.Infra.Data.DataBases.Context;
 using Chat.Infra.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +17,6 @@ namespace Chat.UI.Configurations.Ioc
         {
             Applications(services);
             Repositories(services, configuration);
-            //Clients(services);
         }
 
         public static ApplicationDbContext GetDbContext(IConfiguration configuration, string connectionStringName)
@@ -52,10 +49,5 @@ namespace Chat.UI.Configurations.Ioc
             services.AddScoped<IChatRepository>(provider => 
                 new ChatRepository(GetDbContext(configuration, "DefaultConnection")));            
         }
-
-        //private static void Clients(this IServiceCollection services)
-        //{
-        //    services.AddScoped<IHttpClientBase, HttpClientBase>();
-        //}
     }
 }
