@@ -1,7 +1,9 @@
 ﻿using MassTransit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Chat.UI
 {
+    [ExcludeFromCodeCoverage]
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;

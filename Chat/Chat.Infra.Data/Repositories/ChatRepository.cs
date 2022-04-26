@@ -2,9 +2,11 @@
 using Chat.Domain.Interfaces.Persistence;
 using Chat.Infra.Data.DataBases.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Chat.Infra.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class ChatRepository : IChatRepository
     {
         private readonly ApplicationDbContext _context;
@@ -16,27 +18,17 @@ namespace Chat.Infra.Data.Repositories
 
         public async Task SaveAsync(ChatMessage entity)
         {
-            try
-            {
-                await _context.Set<ChatMessage>().AddAsync(entity);
-
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-            }
+            await _context.Set<ChatMessage>().AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ChatMessage>> GetLastMessagesAsync()
         {
-            var response = await _context.Set<ChatMessage>()
+            return await _context.Set<ChatMessage>()
                 .FromSqlRaw("SELECT TOP(50) c.MessageId, c.SenderUserId, c.Message, c.SentDate, u.Username FROM ChatMessage c " +
                             "inner join AspNetUsers u on (c.SenderUserId = u.Id) " +
                             "order by c.SentDate desc")
                 .ToListAsync();
-
-            return response;
         }
     }
 }

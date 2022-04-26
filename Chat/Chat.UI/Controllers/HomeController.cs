@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Chat.UI.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

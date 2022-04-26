@@ -1,9 +1,11 @@
 ﻿using Chat.Domain.Interfaces.Application;
 using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Chat.Application.Handlers
 {
+    [ExcludeFromCodeCoverage]
     public class PrivateMessageHandler : IMessageHandler
     {
         public uint Order => 100;
@@ -27,7 +29,6 @@ namespace Chat.Application.Handlers
             if (match.Success)
             {
                 // Lets try to send message
-
                 var userId = match.Groups[1].Value;
 
                 // Find our user
@@ -37,16 +38,14 @@ namespace Chat.Application.Handlers
                     userId = found.HubUserId;
                     var userName = found.Name;
 
-                    //todo Should store message for later
+                    // Should store message for later
                     await clients.Users(userId, context.UserIdentifier).SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), $"{_chatService.GetName(context)} -> {userName}", match.Groups[2].Value);
 
-                    // Success
                     return true;
                 }
             }
 
             // Fail
-            // Notify current user we don`t understand
             await clients.Caller.SendAsync("ReceiveMessage", DateTime.Now.ToString("G"), null, "Wrong command or user :/");
 
             return true; // We don`t want other users notice even if we fail in sending private message

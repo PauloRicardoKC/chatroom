@@ -1,8 +1,10 @@
 ﻿using Chat.Domain.Interfaces.Application;
 using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Chat.Application.Handlers
 {
+    [ExcludeFromCodeCoverage]
     public class UserListMessageHandler : IMessageHandler
     {
         public uint Order => 900;

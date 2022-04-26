@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Chat.Infra.Data.Databases.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class CreateTableChatMessage : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

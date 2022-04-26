@@ -1,6 +1,5 @@
 ﻿using Chat.Domain.Entities;
 using Chat.Domain.Interfaces;
-using Chat.Domain.Interfaces.Application;
 using Chat.Domain.Interfaces.Persistence;
 using MassTransit;
 
@@ -9,13 +8,11 @@ namespace Chat.UI.Consumers
     public class StockQuoteConsumer : IConsumer<StockQuote>
     {
         private readonly ILogger<StockQuoteConsumer> _logger;
-        private readonly IChatService _chatService;
         private readonly IChatRepository _chatRepository;
 
-        public StockQuoteConsumer(ILogger<StockQuoteConsumer> logger, IChatService chatService, IChatRepository chatRepository)
+        public StockQuoteConsumer(ILogger<StockQuoteConsumer> logger, IChatRepository chatRepository)
         {
             _logger = logger;
-            _chatService = chatService;
             _chatRepository = chatRepository;
         }
 
@@ -28,7 +25,7 @@ namespace Chat.UI.Consumers
                 var message = context.Message;
 
                 if (message == null) return;
-               
+
                 using (var client = new HttpClient())
                 {
                     var stockCode = message.StockCode;
@@ -58,15 +55,13 @@ namespace Chat.UI.Consumers
                             };
 
                             await _chatRepository.SaveAsync(chatMessage);
-
-                            //await _chatService.BotMessage(chatMessage.SentDate, chatMessage.Message, null);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"[{nameof(StockQuoteConsumer)}] - Error processing message: {ex.Message}");
+                _logger.LogError($"[{nameof(StockQuoteConsumer)}] - Error processing message: {ex.Message}");
                 throw;
             }
         }
