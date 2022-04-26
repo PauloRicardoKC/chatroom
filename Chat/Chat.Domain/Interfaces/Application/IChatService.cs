@@ -73,7 +73,7 @@ namespace Chat.Domain.Interfaces.Application
         /// <param name="sentDate">Sent date message</param>
         /// <param name="message">Message</param>
         /// <returns></returns>
-        Task BotMessage(DateTime sentDate, string message, IHubCallerClients? clients);
+        Task BotMessage(DateTime sentDate, string message, IHubCallerClients clients);
 
         #endregion
     }

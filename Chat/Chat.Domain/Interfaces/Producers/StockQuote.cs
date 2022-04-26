@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace Chat.Domain.Interfaces
+﻿namespace Chat.Domain.Interfaces
 {
     public interface StockQuote
     {

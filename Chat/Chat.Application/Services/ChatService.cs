@@ -132,7 +132,7 @@ namespace Chat.Application.Services
 
         #region User Actions
 
-        public async Task BotMessage(DateTime sentDate, string message, IHubCallerClients? clients)
+        public async Task BotMessage(DateTime sentDate, string message, IHubCallerClients clients)
         {
             await clients.All.SendAsync("ReceiveMessage", sentDate.ToString("G"), "Bot", message);
         }
