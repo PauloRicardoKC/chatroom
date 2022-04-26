@@ -27,7 +27,7 @@ namespace Chat.Application.Services
         }
 
         /// <summary>
-        /// Find message handlers using reflection. Not a mandatory solution. 
+        /// Find message handlers using reflection. 
         /// </summary>
         private void FindMessageHandlers()
         {
@@ -51,7 +51,7 @@ namespace Chat.Application.Services
         #region User Management
 
         /// <summary>
-        /// Simple storage for user mappings. Only for testing purposes ;)
+        /// Simple storage for user mappings.
         /// ConnectionId is used as key
         /// </summary>
         public static Dictionary<string, UserDetail> Users = new Dictionary<string, UserDetail>();
@@ -62,7 +62,6 @@ namespace Chat.Application.Services
         /// <param name="context">Hub context</param>
         public void ConnectUser(HubCallerContext context)
         {
-            // Dictionary is not thread safe!
             lock (Users)
             {
                 Users.Add(context.ConnectionId, new UserDetail()

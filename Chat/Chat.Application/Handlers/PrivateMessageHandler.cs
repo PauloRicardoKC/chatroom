@@ -22,7 +22,6 @@ namespace Chat.Application.Handlers
             if (!message.StartsWith("/pm:", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            //                                     /pm: grp[1] grp[2]
             // Bit of Regex, message is in format '/pm: userId message'
             var regex = new Regex(@"^\/pm\:\s*([^\s]+)\s+(.*)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
             var match = regex.Match(message);
