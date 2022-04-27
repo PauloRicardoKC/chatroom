@@ -12,6 +12,7 @@ SignalR Chat with authorization using Identity Server and using MassTransit libr
 - Identity -> library used for Identity Server.
 - MassTransit -> library used for RabbitMQ. 
 - Docker -> used for running the project.
+- SQL Server -> used for database.
 
 ### Run Application
 Set the application to run with Docker Compose.
